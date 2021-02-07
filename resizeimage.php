@@ -139,7 +139,7 @@
                                     context.drawImage(this, 0, 0, h, w);
                                     break;
                                 case 3:
-                                    context.setTransform(1, 0, 0, -1, 0, h);
+                                    context.setTransform(-1, 0, 0, -1, 0, h);
                                     context.drawImage(this, 0, 0, w, h);
                                     break;
                                 default:
