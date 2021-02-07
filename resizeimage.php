@@ -103,79 +103,55 @@
                         var w = this.width,
                             h = this.height;
 
-                        EXIF.getData(this, function() {
-                            var orientation = EXIF.getTag(this, 'Orientation');
+                        var canvas = document.createElement('canvas'),
+                            context = canvas.getContext('2d');
 
-                            if (orientation === 8 || orientation === 6) {
-                                h = [w, w = h][0];
-                            }
+                        if (width && height) {
+                            w = width;
+                            h = height;
+                        }
+                        else if (width) {
+                            h *= width / w;
+                            w = width;
+                        }
+                        else if (height) {
+                            w *= height / h;
+                            h = height;
+                        }
 
-                            var canvas = document.createElement('canvas'),
-                                context = canvas.getContext('2d');
+                        canvas.width = w;
+                        canvas.height = h;
 
-                            if (width && height) {
-                                w = width;
-                                h = height;
-                            }
-                            else if (width) {
-                                h *= width / w;
-                                w = width;
-                            }
-                            else if (height) {
-                                w *= height / h;
-                                h = height;
-                            }
+                        context.drawImage(this, 0, 0, w, h);
 
-                            canvas.width = w;
-                            canvas.height = h;
+                        var dataURL = canvas.toDataURL('image/' + type);
 
-                            switch (orientation) {
-                                case 8:
-                                    context.setTransform(0, -1, 1, 0, 0, h);
-                                    context.drawImage(this, 0, 0, h, w);
-                                    break;
-                                case 6:
-                                    context.setTransform(0, 1, -1, 0, w, 0);
-                                    context.drawImage(this, 0, 0, h, w);
-                                    break;
-                                case 3:
-                                    context.setTransform(-1, 0, 0, -1, 0, h);
-                                    context.drawImage(this, 0, 0, w, h);
-                                    break;
-                                default:
-                                    context.drawImage(this, 0, 0, w, h);
-                            }
+                        $preview.append('<p><img src="' + dataURL + '" ></p>');
 
+                        var name = file.name;
+                            i = name.lastIndexOf('.');
 
-                            var dataURL = canvas.toDataURL('image/' + type);
+                        if(i === -1) {
+                            name += (type === 'jpeg' ? '_resized.jpg' : '_resized.png');
+                        }
+                        else {
+                            name = name.substr(0, i) + '_resized.' + (type === 'jpeg' ? 'jpg' : 'png');
+                        }
 
-                            $preview.append('<p><img src="' + dataURL + '" ></p>');
+                        if(navigator.msSaveBlob) {
+                            navigator.msSaveBlob(canvas.msToBlob(), name);
+                            return;
+                        }
 
-                            var name = file.name;
-                                i = name.lastIndexOf('.');
+                        var e = document.createEvent('MouseEvents');
 
-                            if(i === -1) {
-                                name += (type === 'jpeg' ? '_resized.jpg' : '_resized.png');
-                            }
-                            else {
-                                name = name.substr(0, i) + '_resized.' + (type === 'jpeg' ? 'jpg' : 'png');
-                            }
+                        e.initEvent('click', true, true);
 
-                            if(navigator.msSaveBlob) {
-                                navigator.msSaveBlob(canvas.msToBlob(), name);
-                                return;
-                            }
-
-                            var e = document.createEvent('MouseEvents');
-
-                            e.initEvent('click', true, true);
-
-                            $('<a>', {
-                                download : name,
-                                href : dataURL,
-                                target : '_blank'
-                            })[0].dispatchEvent(e);
-                        });
+                        $('<a>', {
+                            download : name,
+                            href : dataURL,
+                            target : '_blank'
+                        })[0].dispatchEvent(e);
                     };
 
                     image.src = e.target.result;
