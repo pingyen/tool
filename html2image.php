@@ -168,7 +168,7 @@ h1 {
     <div class="bounce3"></div>
 </div>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/3jhzwliucx7zy1uq4ozfranba35z3wkc1q8qib7anz1bso91/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 tinymce.init({
     selector: 'textarea',
