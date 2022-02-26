@@ -67,7 +67,6 @@
 <!--[if gte IE 9]><!-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" ></script>
 <!--[endif]-->
-<script src="vendor/exif.js" ></script>
 <script>
     (function() {
         var $form = $('#resize'),
